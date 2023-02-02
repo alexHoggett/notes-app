@@ -4,6 +4,20 @@
     return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
   };
 
+  // src/notesClient.js
+  var require_notesClient = __commonJS({
+    "src/notesClient.js"(exports, module) {
+      var notesClient2 = class {
+        loadNotes(callback) {
+          fetch("http://localhost:3000/notes").then((response) => response.json()).then((data) => {
+            callback(data);
+          });
+        }
+      };
+      module.exports = notesClient2;
+    }
+  });
+
   // src/notesModel.js
   var require_notesModel = __commonJS({
     "src/notesModel.js"(exports, module) {
@@ -20,6 +34,9 @@
         reset() {
           this.notes = [];
         }
+        setNotes(notes) {
+          this.notes = notes;
+        }
       };
       module.exports = notesModel2;
     }
@@ -29,8 +46,9 @@
   var require_notesView = __commonJS({
     "src/notesView.js"(exports, module) {
       var notesView2 = class {
-        constructor(model2) {
+        constructor(model2, client2) {
           this.model = model2;
+          this.client = client2;
           const addButtonEl = document.querySelector("#add-note");
           const inputEl = document.querySelector("#message-input");
           addButtonEl.addEventListener("click", () => {
@@ -55,15 +73,22 @@
             note.remove();
           });
         }
+        displayNotesFromApi() {
+          this.client.loadNotes((data) => {
+            this.model.setNotes(data);
+            this.displayNotes();
+          });
+        }
       };
       module.exports = notesView2;
     }
   });
 
   // src/index.js
+  var notesClient = require_notesClient();
   var notesModel = require_notesModel();
   var notesView = require_notesView();
   var model = new notesModel();
-  var view = new notesView(model);
-  view.displayNotes();
+  var client = new notesClient();
+  var view = new notesView(model, client);
 })();

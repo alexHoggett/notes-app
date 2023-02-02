@@ -43,20 +43,25 @@ describe ('notesView class', () => {
     expect(query.length).toBe(2);
   });
 
-  it ('call loadNotes(callback) on client class and displays a list of notes', () => {
+  it ('call loadNotes(callback) on client class and displays a list of notes', async () => {
     const mockClient = {
       loadNotes: jest.fn()
     }
 
-    mockClient.loadNotes.mockResolvedValueOnce(["This note is coming from the server", "Another note"])
+
+    mockClient.loadNotes.mockResolvedValueOnce(["This note is coming from the server", "Another note"]);
 
     const model = new notesModel();
     const view = new notesView(model, mockClient);
-    view.displayNotesFromApi();
+    await view.displayNotesFromApi();
     expect(mockClient.loadNotes).toHaveBeenCalled();
 
-    query = document.querySelectorAll('.note');
+    // console.log(mockClient.loadNotes(callback));
+
+    const query = document.querySelectorAll('.note');
+    console.log(query);
+
     expect(query.length).toBe(2);
-    expect(query[0].textContent).toBe("This note is coming from the server")
-  });
-})
+    expect(query[0].textContent).toBe("This note is coming from the server");
+  });    
+});
