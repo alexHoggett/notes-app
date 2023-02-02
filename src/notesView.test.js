@@ -5,6 +5,7 @@
 const fs = require('fs');
 const notesView = require('./notesView');
 const notesModel = require('./notesModel');
+const notesClient = require('./notesClient');
 
 describe ('notesView class', () => {
   beforeEach(() => {
@@ -59,5 +60,5 @@ describe ('notesView class', () => {
     const query = document.querySelectorAll('.note');
     expect(query.length).toBe(2);
     expect(query[0].textContent).toBe("This note is coming from the server");
-  });    
+  });
 });
