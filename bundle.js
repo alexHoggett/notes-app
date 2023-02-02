@@ -91,4 +91,5 @@
   var model = new notesModel();
   var client = new notesClient();
   var view = new notesView(model, client);
+  view.displayNotesFromApi();
 })();

@@ -19,7 +19,7 @@ describe ('notesView class', () => {
   
   it ('adds a new note', () => {
     const model = new notesModel();
-    view = new notesView(model);
+    const view = new notesView(model);
 
     const button = document.querySelector('#add-note');
     document.querySelector('#message-input').value = 'hello world';
@@ -33,7 +33,7 @@ describe ('notesView class', () => {
 
   it ('clears old notes, before rendering new ones', () => {
     const model = new notesModel();
-    view = new notesView(model);
+    const view = new notesView(model);
 
     const button = document.querySelector('#add-note');
     document.querySelector('#message-input').value = 'hello world';
@@ -43,24 +43,20 @@ describe ('notesView class', () => {
     expect(query.length).toBe(2);
   });
 
-  it ('call loadNotes(callback) on client class and displays a list of notes', async () => {
+  it ('calls loadNotes(callback) on client class and displays a list of notes', () => {
     const mockClient = {
-      loadNotes: jest.fn()
+      loadNotes: jest.fn(callback => {
+        callback(["This note is coming from the server", "Another note"]);
+      })
     }
-
-
-    mockClient.loadNotes.mockResolvedValueOnce(["This note is coming from the server", "Another note"]);
 
     const model = new notesModel();
     const view = new notesView(model, mockClient);
-    await view.displayNotesFromApi();
+
+    view.displayNotesFromApi();
     expect(mockClient.loadNotes).toHaveBeenCalled();
-
-    // console.log(mockClient.loadNotes(callback));
-
+  
     const query = document.querySelectorAll('.note');
-    console.log(query);
-
     expect(query.length).toBe(2);
     expect(query[0].textContent).toBe("This note is coming from the server");
   });    

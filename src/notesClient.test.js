@@ -2,7 +2,7 @@ const notesClient = require('./notesClient');
 
 require('jest-fetch-mock').enableMocks()
 
-describe('notesClient case', () => {
+describe('notesClient class', () => {
     it('calls fetch and loads notes', (done) => {
         const client = new notesClient();
 
