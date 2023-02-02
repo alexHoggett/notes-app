@@ -17,18 +17,46 @@ describe ('notesView class', () => {
     expect(view.model).toBe(model);
   });
   
-  it ('displays all notes', () => {
+  it ('adds a new note', () => {
     const model = new notesModel();
-    model.addNote('First Note');
-    model.addNote('Second Note');
     view = new notesView(model);
-    view.displayNotes();
+
+    const button = document.querySelector('#add-note');
+    document.querySelector('#message-input').value = 'hello world';
+    button.click();
+
+    query = document.querySelectorAll('.note');
+    expect(query.length).toBe(1);
+    expect(query[0].textContent).toBe('hello world');
+    expect(query[0].className).toBe('note');
+  });
+
+  it ('clears old notes, before rendering new ones', () => {
+    const model = new notesModel();
+    view = new notesView(model);
+
+    const button = document.querySelector('#add-note');
+    document.querySelector('#message-input').value = 'hello world';
+    button.click();
+    button.click();
+    query = document.querySelectorAll('.note');
+    expect(query.length).toBe(2);
+  });
+
+  it ('call loadNotes(callback) on client class and displays a list of notes', () => {
+    const mockClient = {
+      loadNotes: jest.fn()
+    }
+
+    mockClient.loadNotes.mockResolvedValueOnce(["This note is coming from the server", "Another note"])
+
+    const model = new notesModel();
+    const view = new notesView(model, mockClient);
+    view.displayNotesFromApi();
+    expect(mockClient.loadNotes).toHaveBeenCalled();
 
     query = document.querySelectorAll('.note');
     expect(query.length).toBe(2);
-    expect(query[0].textContent).toBe("First Note");
-    expect(query[1].textContent).toBe("Second Note");
-    expect(query[0].className).toBe("note");
-    expect(query[1].className).toBe("note");
+    expect(query[0].textContent).toBe("This note is coming from the server")
   });
 })
