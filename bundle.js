@@ -63,11 +63,14 @@
           const addButtonEl = document.querySelector("#add-note");
           const inputEl = document.querySelector("#message-input");
           addButtonEl.addEventListener("click", () => {
-            this.model.addNote(inputEl.value);
-            this.clearNotes();
-            this.displayNotes();
-            inputEl.value = "";
+            this.addNote(inputEl);
           });
+        }
+        addNote(inputEl) {
+          this.client.createNote(inputEl.value);
+          this.clearNotes();
+          this.displayNotesFromApi();
+          inputEl.value = "";
         }
         displayNotes() {
           const notes = this.model.getNotes();
