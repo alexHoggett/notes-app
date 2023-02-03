@@ -17,7 +17,7 @@ describe('notesClient class', () => {
   });
 
 
-  it ('uses the GET method to post notes to the notes API', async () => {
+  it ('uses the POST method to post notes to the notes API', async () => {
     const client = new notesClient();
     await client.createNote('this is a new note');
 

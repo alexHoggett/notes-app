@@ -100,5 +100,17 @@ describe ('notesView class', () => {
     button.click();
 
     expect(mockClient.createNote).toHaveBeenCalledWith('this has been added by the API');
+  });
+
+  it ('shows an error on the page, when the fetch request fails', () => {
+    const mockClient = {
+      createNote: jest.fn(),
+      loadNotes: jest.fn()
+    }
+    const model = new notesModel();
+    const view = new notesView(model, mockClient);
+
+    view.displayError();
+    expect(document.body.innerHTML.includes('Oops, something went wrong!')).toBe(true);
   })
 });

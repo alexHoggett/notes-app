@@ -12,7 +12,7 @@ class notesView{
   }
 
   addNote(inputEl){
-    this.client.createNote(inputEl.value);
+    this.client.createNote(inputEl.value, this.displayError);
     this.clearNotes();
     this.displayNotesFromApi();
     inputEl.value = '';
@@ -41,7 +41,17 @@ class notesView{
     this.client.loadNotes((data) => {
       this.model.setNotes(data);
       this.displayNotes();
+    }, () => {
+      this.displayError();
     });
+  }
+
+  displayError(){
+    // insert error message
+    const content = 'Oops, something went wrong!';
+    const element = document.createElement('div');
+    element.append(content);
+    document.querySelector('h1').append(element);
   }
 }
 

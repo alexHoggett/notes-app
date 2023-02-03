@@ -9,3 +9,4 @@ const view = new notesView(model, client);
 // model.setNotes();
 // view.displayNotes();
 view.displayNotesFromApi();
+// view.displayError();
