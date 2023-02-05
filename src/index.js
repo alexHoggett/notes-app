@@ -10,3 +10,4 @@ const view = new notesView(model, client);
 // view.displayNotes();
 view.displayNotesFromApi();
 // view.displayError();
+client.getEmojified('something');

@@ -10,7 +10,7 @@ class notesClient{
       })
   }
 
-  createNote(note, errorCallback) {
+  createNote(note, errorCallback){
     const data = { content: note };
     fetch('http://localhost:3000/notes', {
       method: 'POST', // or 'PUT'
@@ -21,6 +21,24 @@ class notesClient{
     })
     .catch((error) => {
       errorCallback();
+    })
+  }
+
+  getEmojified(note){
+    return new Promise((resolve, reject) => {
+      const data = { text: note };
+      fetch('https://makers-emojify.herokuapp.com/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      })
+      .then((response) => response.json())
+      .then(data => {
+        console.log(data);
+        resolve(data.emojified_text);
+      })
     })
   }
 }

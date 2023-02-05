@@ -27,7 +27,8 @@ describe ('notesView class', () => {
       createNote: jest.fn(),
       loadNotes: jest.fn(callback => {
         callback(["hello world"]);
-      })
+      }),
+      getEmojified: jest.fn()
     }
     const view = new notesView(model, mockClient);
 
@@ -52,7 +53,8 @@ describe ('notesView class', () => {
         })
         .mockImplementationOnce(callback => {
           callback(["hello world", "hello world"]);
-        })
+        }),
+        getEmojified: jest.fn()
     }
 
     const view = new notesView(model, mockClient);
@@ -86,10 +88,9 @@ describe ('notesView class', () => {
   it ('makes a call to the API when we add a note', async () => {
     const mockClient = {
       createNote: jest.fn(),
-      loadNotes: jest.fn()
+      loadNotes: jest.fn(),
+      getEmojified: jest.fn()
     }
-
-    // mockClient.createNote.mockResolvedValueOnce(['this has been added by the API']);
 
     const model = new notesModel();
     const view = new notesView(model, mockClient);
@@ -99,18 +100,39 @@ describe ('notesView class', () => {
     const button = document.querySelector('#add-note');
     button.click();
 
-    expect(mockClient.createNote).toHaveBeenCalledWith('this has been added by the API');
+    expect(mockClient.createNote).toHaveBeenCalledWith('this has been added by the API', view.displayError);
   });
 
   it ('shows an error on the page, when the fetch request fails', () => {
     const mockClient = {
       createNote: jest.fn(),
-      loadNotes: jest.fn()
+      loadNotes: jest.fn(),
+      getEmojified: jest.fn()
     }
     const model = new notesModel();
     const view = new notesView(model, mockClient);
 
     view.displayError();
     expect(document.body.innerHTML.includes('Oops, something went wrong!')).toBe(true);
+  });
+
+  it ('adds an emojified message to the page', async () => {
+    const mockClient = {
+      createNote: jest.fn(),
+      loadNotes: jest.fn(callback => {
+        callback(["This note is coming from the server", "Another note"]);
+      }),
+      getEmojified: jest.fn()
+    }
+    
+    const model = new notesModel();
+    const view = new notesView(model, mockClient);
+
+    const input = document.querySelector('#message-input');
+    input.value = 'this is an emoji :earth_africa:';
+    const button = document.querySelector('#add-note');
+    button.click();
+
+
   })
 });

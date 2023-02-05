@@ -7,15 +7,17 @@ class notesView{
     const inputEl = document.querySelector('#message-input');
 
     addButtonEl.addEventListener('click', () => {
-      this.addNote(inputEl);
+      this.addNote(inputEl.value);
+      inputEl.value = '';
     });
   }
 
-  addNote(inputEl){
-    this.client.createNote(inputEl.value, this.displayError);
+  async addNote(text){
+    const message = await this.client.getEmojified(text);
+    console.log(message);
+    await this.client.createNote(message, this.displayError);
     this.clearNotes();
     this.displayNotesFromApi();
-    inputEl.value = '';
   }
 
   displayNotes(){

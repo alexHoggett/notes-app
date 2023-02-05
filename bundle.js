@@ -28,6 +28,21 @@
             errorCallback();
           });
         }
+        getEmojified(note) {
+          return new Promise((resolve, reject) => {
+            const data = { text: note };
+            fetch("https://makers-emojify.herokuapp.com/", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify(data)
+            }).then((response) => response.json()).then((data2) => {
+              console.log(data2);
+              resolve(data2.emojified_text);
+            });
+          });
+        }
       };
       module.exports = notesClient2;
     }
@@ -67,14 +82,16 @@
           const addButtonEl = document.querySelector("#add-note");
           const inputEl = document.querySelector("#message-input");
           addButtonEl.addEventListener("click", () => {
-            this.addNote(inputEl);
+            this.addNote(inputEl.value);
+            inputEl.value = "";
           });
         }
-        addNote(inputEl) {
-          this.client.createNote(inputEl.value, this.displayError);
+        async addNote(text) {
+          const message = await this.client.getEmojified(text);
+          console.log(message);
+          await this.client.createNote(message, this.displayError);
           this.clearNotes();
           this.displayNotesFromApi();
-          inputEl.value = "";
         }
         displayNotes() {
           const notes = this.model.getNotes();
@@ -118,4 +135,5 @@
   var client = new notesClient();
   var view = new notesView(model, client);
   view.displayNotesFromApi();
+  client.getEmojified("something");
 })();

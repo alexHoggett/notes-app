@@ -2,8 +2,8 @@ const notesClient = require('./notesClient');
 
 require('jest-fetch-mock').enableMocks()
 
-describe('notesClient class', () => {
-  it('calls fetch and loads notes', (done) => {
+describe ('notesClient class', () => {
+  it ('calls fetch and loads notes', (done) => {
     const client = new notesClient();
 
     fetch.mockResponseOnce(JSON.stringify({
@@ -31,6 +31,20 @@ describe('notesClient class', () => {
         body: JSON.stringify({ content: "this is a new note" }),
       })
     );
+  });
 
+  it ('calls fetch and loads text from an API that converts text to emojis', () => {
+    const client = new notesClient();
+
+    fetch.mockResponseOnce(JSON.stringify({
+      text: "this is an emoji 🌍"
+    }));
+
+    client.getEmojified('this is an emoji :earth_africa:');
+    
+    client.loadNotes((returnedDataFromApi) => {
+      expect(returnedDataFromApi.text).toEqual("this is an emoji 🌍")
+      done();
+    });
   });
 })
